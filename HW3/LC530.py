@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Apr 30 12:09:07 2019
+Created on Sat May  4 13:45:23 2019
 
 @author: paul
 """
@@ -15,7 +15,7 @@ class Tree:
                 node_list.append(node)
                 if i==0:
                     continue
-                if i-1 % 2 ==0:
+                if (i-1) % 2 ==0:
                     node_list[int((i-1)/2)].left = node
                 else:
                     node_list[int((i-2)/2)].right = node
@@ -23,8 +23,7 @@ class Tree:
             self.root = node_list[0]
         else:
             self.root = None
-                
-
+            
 # Definition for a binary tree node.
 class TreeNode:
      def __init__(self, x):
@@ -32,29 +31,24 @@ class TreeNode:
          self.left = None
          self.right = None
 
-from collections import deque
-
 class Solution:
-    def levelOrder(self, root):
-        if root == None:
-            return []
-        q = deque([root])
-        result_list = []
-        while q:
-            size = len(q)
-            tmp_list = []
-            for i in range(size):
-                element = q.popleft()
-                tmp_list.append(element.val)
-                if element.left:
-                    q.append(element.left)
-                if element.right:
-                    q.append(element.right)
-            result_list.append(tmp_list)
-        return result_list
+    
+    def inorder(self, node):
+        if node:
+            self.inorder(node.left)
+            self.val_list.append(node.val)
+            self.inorder(node.right)
+            
+    def getMinimumDifference(self, root):
+        self.val_list = []
+        self.inorder(root)
+        diff = self.val_list[-1]-self.val_list[0]
+        for i in range(len(self.val_list)-1):
+            diff = min(diff, self.val_list[i+1]-self.val_list[i])
+        return diff
     
 if __name__ == "__main__":
-    tree_list = [3,9,20,None,None,15,7]
-    tree = Tree(tree_list)
+    num_list = [1,None,3,2]
+    tree = Tree(num_list)
     sol = Solution()
-    print(sol.levelOrder(tree.root))
+    print(sol.getMinimumDifference(tree.root))

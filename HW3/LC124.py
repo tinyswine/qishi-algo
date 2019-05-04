@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Apr 30 12:09:07 2019
+Created on Sat May  4 15:29:26 2019
 
 @author: paul
 """
@@ -15,7 +15,7 @@ class Tree:
                 node_list.append(node)
                 if i==0:
                     continue
-                if i-1 % 2 ==0:
+                if (i-1) % 2 ==0:
                     node_list[int((i-1)/2)].left = node
                 else:
                     node_list[int((i-2)/2)].right = node
@@ -23,8 +23,7 @@ class Tree:
             self.root = node_list[0]
         else:
             self.root = None
-                
-
+            
 # Definition for a binary tree node.
 class TreeNode:
      def __init__(self, x):
@@ -32,29 +31,27 @@ class TreeNode:
          self.left = None
          self.right = None
 
-from collections import deque
-
-class Solution:
-    def levelOrder(self, root):
-        if root == None:
-            return []
-        q = deque([root])
-        result_list = []
-        while q:
-            size = len(q)
-            tmp_list = []
-            for i in range(size):
-                element = q.popleft()
-                tmp_list.append(element.val)
-                if element.left:
-                    q.append(element.left)
-                if element.right:
-                    q.append(element.right)
-            result_list.append(tmp_list)
-        return result_list
+class Solution(object):
+    
+    def maxthrough(self,node):
+        if not node:
+            return 0
+        left_sum = max(self.maxthrough(node.left),0)
+        right_sum = max(self.maxthrough(node.right),0)
+        self.res = max(node.val+left_sum+right_sum, self.res)
+        return max(left_sum, right_sum)+node.val
+    
+    def maxPathSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.res = float('-inf')
+        self.maxthrough(root)
+        return self.res
     
 if __name__ == "__main__":
-    tree_list = [3,9,20,None,None,15,7]
-    tree = Tree(tree_list)
+    num_list = [-10,9,20,None,None,15,7]
+    tree = Tree(num_list)
     sol = Solution()
-    print(sol.levelOrder(tree.root))
+    print(sol.maxPathSum(tree.root))
